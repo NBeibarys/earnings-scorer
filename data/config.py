@@ -96,7 +96,8 @@ CRSP_VARS = {
 }
 
 # ── Fama-French 5 Factor Variables ────────────────────────────────────────────
-# Source: ff.factors_monthly on WRDS (Ken French data library mirror).
+# Source: ff.fivefactors_monthly on WRDS (Ken French data library mirror).
+# Note: ff.factors_monthly only has 3 factors + momentum; FF5 is separate table.
 # Used for FF5-adjusted returns (Table 8, 9) and Carhart 4-factor
 # short-term event returns (Table 10, UMD momentum factor included).
 

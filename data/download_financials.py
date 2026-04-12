@@ -170,7 +170,7 @@ def pull_crsp(db: wrds.Connection, permno_list: str) -> pd.DataFrame:
 def pull_ff5_factors(db: wrds.Connection) -> pd.DataFrame:
     """
     Pull Fama-French 5-factor + momentum monthly returns from WRDS.
-    Source: ff.factors_monthly (Ken French data library mirror).
+    Source: ff.fivefactors_monthly (Ken French data library mirror).
     Used to compute:
         - FF5-adjusted abnormal returns (Table 8, 9)
         - Carhart 4-factor event returns (Table 10, uses UMD)
@@ -182,7 +182,7 @@ def pull_ff5_factors(db: wrds.Connection) -> pd.DataFrame:
         SELECT
             {cols}
         FROM
-            ff.factors_monthly
+            ff.fivefactors_monthly
         WHERE
             date BETWEEN '{START_DATE}' AND '{END_DATE}'
     """
