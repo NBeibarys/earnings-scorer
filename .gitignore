@@ -1,0 +1,38 @@
+# ── Credentials — NEVER commit ────────────────────────────────────────────────
+.env
+*.key
+*.pem
+secrets.*
+
+# ── Large data files — reproduce via download scripts ─────────────────────────
+data/transcripts/
+data/financials/
+data/merged.parquet
+results/
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── Conda / virtualenv ────────────────────────────────────────────────────────
+.conda/
+env/
+venv/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.swp

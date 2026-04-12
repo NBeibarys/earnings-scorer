@@ -1,0 +1,7 @@
+pandas
+pyarrow
+datasets>=2.0
+python-dotenv
+wrds
+streamlit
+statsmodels
