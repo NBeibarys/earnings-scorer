@@ -10,7 +10,7 @@ Data sources (all via WRDS):
     2. CCM Link Table       →  crsp.ccmxpf_lnkhist
     3. CRSP Monthly         →  crsp.msf
     4. Fama-French Factors  →  ff.factors_monthly
-    5. I/B/E/S Forecasts    →  ibes.statsum_epsus
+    5. I/B/E/S Forecasts    →  ibes.statsum_epsus (EPS) + ibes.statsum_xepsus (CPX)
 
 Outputs saved to data/financials/:
     compustat_quarterly.parquet
@@ -197,33 +197,57 @@ def pull_ff5_factors(db: wrds.Connection) -> pd.DataFrame:
 
 def pull_ibes(db: wrds.Connection, ticker_list: str) -> pd.DataFrame:
     """
-    Pull I/B/E/S consensus capex and EPS forecasts from ibes.statsum_epsus.
+    Pull I/B/E/S consensus capex and EPS forecasts.
+
+    EPS  — from ibes.statsum_epsus  (standard EPS summary table)
+    CPX  — from ibes.statsum_xepsus (extended measures table; 'CPEX' does not exist,
+            capital expenditure forecasts are stored under measure = 'CPX')
 
     Our substitute for the Duke CFO Survey (Table 11 of paper):
-        investment score high  +  analysts revised capex upward
-        → both signals independently agree the call was informative.
+        LLM investment score high + analysts revised CPX upward in same quarter
+        → independent evidence the model extracts real investment signal.
 
     Filters:
-        measure IN ('CPEX', 'EPS')  — capex forecasts + EPS for earnings surprise
-        fpi IN ('1', '6')           — annual and next-quarter forecast horizons
+        fpi IN ('1', '6') — annual and next-quarter forecast horizons
     """
     cols = ",\n".join(IBES_VARS.keys())
 
-    query = f"""
+    # EPS from the standard table
+    eps_query = f"""
         SELECT
             {cols}
           FROM
             ibes.statsum_epsus
          WHERE
-            statpers     BETWEEN '{START_DATE}' AND '{END_DATE}'
-            AND measure  IN ('CPEX', 'EPS')
-            AND fpi      IN ('1', '6')
-            AND ticker   IN ({ticker_list})
+            statpers   BETWEEN '{START_DATE}' AND '{END_DATE}'
+            AND measure = 'EPS'
+            AND fpi    IN ('1', '6')
+            AND ticker IN ({ticker_list})
     """
 
-    print("Querying ibes.statsum_epsus...")
-    df = db.raw_sql(query, date_cols=["fpedats", "statpers"])
-    print(f"  {len(df):,} firm-period obs  |  {df['ticker'].nunique():,} unique tickers")
+    # capital expenditure forecasts from the extended table
+    cpx_query = f"""
+        SELECT
+            {cols}
+          FROM
+            ibes.statsum_xepsus
+         WHERE
+            statpers   BETWEEN '{START_DATE}' AND '{END_DATE}'
+            AND measure = 'CPX'
+            AND fpi    IN ('1', '6')
+            AND ticker IN ({ticker_list})
+    """
+
+    print("Querying ibes.statsum_epsus (EPS)...")
+    eps = db.raw_sql(eps_query, date_cols=["fpedats", "statpers"])
+    print(f"  {len(eps):,} EPS rows")
+
+    print("Querying ibes.statsum_xepsus (CPX)...")
+    cpx = db.raw_sql(cpx_query, date_cols=["fpedats", "statpers"])
+    print(f"  {len(cpx):,} CPX rows")
+
+    df = pd.concat([eps, cpx], ignore_index=True)
+    print(f"  {len(df):,} total rows  |  {df['ticker'].nunique():,} unique tickers")
     return df
 
 

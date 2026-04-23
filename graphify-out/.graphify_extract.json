@@ -1,0 +1,862 @@
+{
+  "nodes": [
+    {
+      "id": "analysis_validate_py",
+      "label": "validate.py",
+      "file_type": "code",
+      "source_file": "analysis\\validate.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_app_py",
+      "label": "app.py",
+      "file_type": "code",
+      "source_file": "app\\app.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "data_config_py",
+      "label": "config.py",
+      "file_type": "code",
+      "source_file": "data\\config.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_rationale_1",
+      "label": "config.py \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+      "file_type": "rationale",
+      "source_file": "data\\config.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "data_download_financials_py",
+      "label": "download_financials.py",
+      "file_type": "code",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "download_financials_ticker_list_from_transcripts",
+      "label": "_ticker_list_from_transcripts()",
+      "file_type": "code",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L48"
+    },
+    {
+      "id": "download_financials_save",
+      "label": "_save()",
+      "file_type": "code",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L65"
+    },
+    {
+      "id": "download_financials_pull_compustat",
+      "label": "pull_compustat()",
+      "file_type": "code",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L74"
+    },
+    {
+      "id": "download_financials_pull_ccm_link",
+      "label": "pull_ccm_link()",
+      "file_type": "code",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L111"
+    },
+    {
+      "id": "download_financials_pull_crsp",
+      "label": "pull_crsp()",
+      "file_type": "code",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L145"
+    },
+    {
+      "id": "download_financials_pull_ff5_factors",
+      "label": "pull_ff5_factors()",
+      "file_type": "code",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L170"
+    },
+    {
+      "id": "download_financials_pull_ibes",
+      "label": "pull_ibes()",
+      "file_type": "code",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L198"
+    },
+    {
+      "id": "download_financials_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L256"
+    },
+    {
+      "id": "download_financials_rationale_1",
+      "label": "download_financials.py \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
+      "file_type": "rationale",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "download_financials_rationale_49",
+      "label": "Read unique tickers from the transcript parquet.     Scopes all WRDS queries to",
+      "file_type": "rationale",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L49"
+    },
+    {
+      "id": "download_financials_rationale_66",
+      "label": "Write DataFrame to financials/ as parquet and print confirmation.",
+      "file_type": "rationale",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L66"
+    },
+    {
+      "id": "download_financials_rationale_75",
+      "label": "Pull quarterly fundamentals from comp.fundq.     SIC code joined from comp.compa",
+      "file_type": "rationale",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L75"
+    },
+    {
+      "id": "download_financials_rationale_112",
+      "label": "Pull the Compustat\u2013CRSP Merged link table.     Maps gvkey (Compustat) \u2194 permno (",
+      "file_type": "rationale",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L112"
+    },
+    {
+      "id": "download_financials_rationale_146",
+      "label": "Pull monthly stock returns and prices from crsp.msf.     Scoped to permnos from",
+      "file_type": "rationale",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L146"
+    },
+    {
+      "id": "download_financials_rationale_171",
+      "label": "Pull Fama-French 5-factor + momentum monthly returns from WRDS.     Source: ff.f",
+      "file_type": "rationale",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L171"
+    },
+    {
+      "id": "download_financials_rationale_199",
+      "label": "Pull I/B/E/S consensus capex and EPS forecasts.      EPS  \u2014 from ibes.statsum_ep",
+      "file_type": "rationale",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L199"
+    },
+    {
+      "id": "data_download_transcripts_py",
+      "label": "download_transcripts.py",
+      "file_type": "code",
+      "source_file": "data\\download_transcripts.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "download_transcripts_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "data\\download_transcripts.py",
+      "source_location": "L19"
+    },
+    {
+      "id": "download_transcripts_rationale_1",
+      "label": "download_transcripts.py Downloads earnings call transcripts from HuggingFace and",
+      "file_type": "rationale",
+      "source_file": "data\\download_transcripts.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_masker_py",
+      "label": "masker.py",
+      "file_type": "code",
+      "source_file": "src\\masker.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_scorer_py",
+      "label": "scorer.py",
+      "file_type": "code",
+      "source_file": "src\\scorer.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "earnings_call_investment_scorer",
+      "label": "Earnings Call Investment Scorer",
+      "type": "project",
+      "file_type": "document",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "rationale": "Project replicates and extends Jha, Qian, Weber, and Yang 2024 using LLM scores from earnings calls."
+    },
+    {
+      "id": "chatgpt_and_corporate_policies",
+      "label": "ChatGPT and Corporate Policies",
+      "type": "paper",
+      "file_type": "paper",
+      "confidence": "EXTRACTED",
+      "source_file": "w32161 (1).pdf",
+      "rationale": "NBER Working Paper 32161 is the project reference paper."
+    },
+    {
+      "id": "llm_investment_score",
+      "label": "LLM investment score",
+      "type": "measure",
+      "file_type": "document",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "rationale": "Continuous signal from -1 to 1 for expected capital investment."
+    },
+    {
+      "id": "management_presentation_score",
+      "label": "Management presentation score",
+      "type": "measure",
+      "file_type": "document",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "rationale": "Project plans separate scoring for prepared management remarks."
+    },
+    {
+      "id": "q_a_score",
+      "label": "Q&A score",
+      "type": "measure",
+      "file_type": "document",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "rationale": "Project plans separate scoring for analyst question-and-answer sections."
+    },
+    {
+      "id": "name_masking",
+      "label": "Name masking",
+      "type": "method",
+      "file_type": "code",
+      "confidence": "EXTRACTED",
+      "source_file": "src/masker.py",
+      "rationale": "Masks company and executive names before model scoring."
+    },
+    {
+      "id": "claude_scoring_pipeline",
+      "label": "Claude scoring pipeline",
+      "type": "component",
+      "file_type": "code",
+      "confidence": "EXTRACTED",
+      "source_file": "src/scorer.py",
+      "rationale": "Intended model scoring implementation using Claude with long context and temperature zero."
+    },
+    {
+      "id": "earnings_call_transcripts",
+      "label": "Earnings call transcripts",
+      "type": "dataset",
+      "file_type": "document",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "rationale": "HuggingFace S&P 500 earnings call transcript corpus."
+    },
+    {
+      "id": "kurry_sp500_earnings_transcripts",
+      "label": "kurry/sp500_earnings_transcripts",
+      "type": "dataset",
+      "file_type": "code",
+      "confidence": "EXTRACTED",
+      "source_file": "data/config.py",
+      "rationale": "Pinned HuggingFace transcript dataset."
+    },
+    {
+      "id": "wrds_financial_data",
+      "label": "WRDS financial data",
+      "type": "dataset",
+      "file_type": "document",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "rationale": "Financial validation data pulled through WRDS."
+    },
+    {
+      "id": "compustat_quarterly_fundamentals",
+      "label": "Compustat quarterly fundamentals",
+      "type": "dataset",
+      "file_type": "code",
+      "confidence": "EXTRACTED",
+      "source_file": "data/download_financials.py",
+      "rationale": "Quarterly fundamentals used for capex and accounting controls."
+    },
+    {
+      "id": "crsp_monthly_returns",
+      "label": "CRSP monthly returns",
+      "type": "dataset",
+      "file_type": "code",
+      "confidence": "EXTRACTED",
+      "source_file": "data/download_financials.py",
+      "rationale": "Monthly stock return data used for return tests."
+    },
+    {
+      "id": "fama_french_factors",
+      "label": "Fama-French factors",
+      "type": "dataset",
+      "file_type": "code",
+      "confidence": "EXTRACTED",
+      "source_file": "data/download_financials.py",
+      "rationale": "Factor returns used for abnormal-return adjustments."
+    },
+    {
+      "id": "i_b_e_s_analyst_forecasts",
+      "label": "I/B/E/S analyst forecasts",
+      "type": "dataset",
+      "file_type": "code",
+      "confidence": "EXTRACTED",
+      "source_file": "data/download_financials.py",
+      "rationale": "Analyst capex and EPS forecasts substitute for private CFO survey validation."
+    },
+    {
+      "id": "validation_regressions",
+      "label": "Validation regressions",
+      "type": "analysis",
+      "file_type": "code",
+      "confidence": "EXTRACTED",
+      "source_file": "analysis/validate.py",
+      "rationale": "Planned regressions merge model scores with realized capex and returns."
+    },
+    {
+      "id": "streamlit_demo",
+      "label": "Streamlit demo",
+      "type": "app",
+      "file_type": "code",
+      "confidence": "EXTRACTED",
+      "source_file": "app/app.py",
+      "rationale": "Planned paste-a-transcript web demo for real-time scoring."
+    },
+    {
+      "id": "reproducibility",
+      "label": "Reproducibility",
+      "type": "quality",
+      "file_type": "document",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "rationale": "Pinned data revision, full-call prompts, and temperature zero support reproducible scoring."
+    },
+    {
+      "id": "extended_2025_sample",
+      "label": "Extended 2025 sample",
+      "type": "contribution",
+      "file_type": "document",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "rationale": "Project extends returns and transcript period beyond the original paper."
+    },
+    {
+      "id": "capital_expenditures_prediction",
+      "label": "Capital expenditures prediction",
+      "type": "outcome",
+      "file_type": "paper",
+      "confidence": "EXTRACTED",
+      "source_file": "w32161 (1).pdf",
+      "rationale": "Reference paper validates investment score against future capital expenditure."
+    },
+    {
+      "id": "negative_abnormal_returns",
+      "label": "Negative abnormal returns",
+      "type": "outcome",
+      "file_type": "paper",
+      "confidence": "EXTRACTED",
+      "source_file": "w32161 (1).pdf",
+      "rationale": "Reference paper reports high investment score firms have negative future abnormal returns."
+    }
+  ],
+  "edges": [
+    {
+      "source": "data_config_py",
+      "target": "os",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\config.py",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "config_rationale_1",
+      "target": "data_config_py",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\config.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "os",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "wrds",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "pandas",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "dotenv",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "config",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "download_financials_ticker_list_from_transcripts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "download_financials_save",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "download_financials_pull_compustat",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "download_financials_pull_ccm_link",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L111",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "download_financials_pull_crsp",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L145",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "download_financials_pull_ff5_factors",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L170",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "download_financials_pull_ibes",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_financials_py",
+      "target": "download_financials_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L256",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_main",
+      "target": "download_financials_ticker_list_from_transcripts",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L262",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_main",
+      "target": "download_financials_pull_compustat",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L266",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_main",
+      "target": "download_financials_save",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L267",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_main",
+      "target": "download_financials_pull_ccm_link",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L272",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_main",
+      "target": "download_financials_pull_crsp",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L279",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_main",
+      "target": "download_financials_pull_ff5_factors",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L284",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_main",
+      "target": "download_financials_pull_ibes",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L287",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_rationale_1",
+      "target": "data_download_financials_py",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_rationale_49",
+      "target": "download_financials_ticker_list_from_transcripts",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_rationale_66",
+      "target": "download_financials_save",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_rationale_75",
+      "target": "download_financials_pull_compustat",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_rationale_112",
+      "target": "download_financials_pull_ccm_link",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_rationale_146",
+      "target": "download_financials_pull_crsp",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L146",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_rationale_171",
+      "target": "download_financials_pull_ff5_factors",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L171",
+      "weight": 1.0
+    },
+    {
+      "source": "download_financials_rationale_199",
+      "target": "download_financials_pull_ibes",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_financials.py",
+      "source_location": "L199",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_transcripts_py",
+      "target": "os",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_transcripts.py",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_transcripts_py",
+      "target": "datasets",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_transcripts.py",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_transcripts_py",
+      "target": "config",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_transcripts.py",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "data_download_transcripts_py",
+      "target": "download_transcripts_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_transcripts.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "download_transcripts_rationale_1",
+      "target": "data_download_transcripts_py",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "data\\download_transcripts.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "earnings_call_investment_scorer",
+      "target": "chatgpt_and_corporate_policies",
+      "relation": "replicates_and_extends",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "earnings_call_investment_scorer",
+      "target": "llm_investment_score",
+      "relation": "produces",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "llm_investment_score",
+      "target": "management_presentation_score",
+      "relation": "has_component",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "llm_investment_score",
+      "target": "q_a_score",
+      "relation": "has_component",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "name_masking",
+      "target": "claude_scoring_pipeline",
+      "relation": "preprocesses_for",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "src/masker.py"
+    },
+    {
+      "source": "claude_scoring_pipeline",
+      "target": "llm_investment_score",
+      "relation": "generates",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "src/scorer.py"
+    },
+    {
+      "source": "earnings_call_transcripts",
+      "target": "claude_scoring_pipeline",
+      "relation": "input_to",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "kurry_sp500_earnings_transcripts",
+      "target": "earnings_call_transcripts",
+      "relation": "provides",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "data/config.py"
+    },
+    {
+      "source": "wrds_financial_data",
+      "target": "validation_regressions",
+      "relation": "input_to",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "compustat_quarterly_fundamentals",
+      "target": "wrds_financial_data",
+      "relation": "part_of",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "data/download_financials.py"
+    },
+    {
+      "source": "crsp_monthly_returns",
+      "target": "wrds_financial_data",
+      "relation": "part_of",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "data/download_financials.py"
+    },
+    {
+      "source": "fama_french_factors",
+      "target": "wrds_financial_data",
+      "relation": "part_of",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "data/download_financials.py"
+    },
+    {
+      "source": "i_b_e_s_analyst_forecasts",
+      "target": "wrds_financial_data",
+      "relation": "part_of",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "data/download_financials.py"
+    },
+    {
+      "source": "llm_investment_score",
+      "target": "validation_regressions",
+      "relation": "validated_by",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "validation_regressions",
+      "target": "capital_expenditures_prediction",
+      "relation": "tests",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "validation_regressions",
+      "target": "negative_abnormal_returns",
+      "relation": "tests",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "streamlit_demo",
+      "target": "claude_scoring_pipeline",
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "reproducibility",
+      "target": "claude_scoring_pipeline",
+      "relation": "constrains",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "extended_2025_sample",
+      "target": "crsp_monthly_returns",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    },
+    {
+      "source": "chatgpt_and_corporate_policies",
+      "target": "capital_expenditures_prediction",
+      "relation": "argues",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "w32161 (1).pdf"
+    },
+    {
+      "source": "chatgpt_and_corporate_policies",
+      "target": "negative_abnormal_returns",
+      "relation": "argues",
+      "confidence": "EXTRACTED",
+      "weight": 1.0,
+      "source_file": "w32161 (1).pdf"
+    },
+    {
+      "source": "i_b_e_s_analyst_forecasts",
+      "target": "capital_expenditures_prediction",
+      "relation": "independent_validation_for",
+      "confidence": "INFERRED",
+      "weight": 1.0,
+      "source_file": "README.md"
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

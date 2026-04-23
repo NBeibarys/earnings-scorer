@@ -9,6 +9,8 @@ data/transcripts/
 data/financials/
 data/merged.parquet
 results/
+models/*
+!models/.gitkeep
 
 # ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/

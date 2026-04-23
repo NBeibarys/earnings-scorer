@@ -113,16 +113,16 @@ FF5_VARS = {
 }
 
 # ── I/B/E/S Analyst Forecast Variables ───────────────────────────────────────
-# Source: ibes.statsum_epsus on WRDS.
-# Our substitute for the Duke CFO Survey (not publicly available).
+# Sources:
+#   EPS — ibes.statsum_epsus  (standard EPS summary table)
+#   CPX — ibes.statsum_xepsus (extended measures; capex stored as measure = 'CPX',
+#          NOT 'CPEX' — that measure does not exist in WRDS I/B/E/S)
 #
 # Use case (replaces paper's Table 11):
-#   If investment score is high AND analysts revised capex estimates upward
-#   in the same quarter → independent corroboration that the call was informative.
+#   If LLM investment score is high AND analysts revised CPX upward in same quarter
+#   → independent evidence the model extracts real investment signal from the call.
 #
-# IMPORTANT: filter measure = 'CPEX' for capital expenditure forecasts.
-#            measure = 'EPS'  for earnings — useful for earnings surprise control.
-#            fpi = '1' → next fiscal year; fpi = '6' → next fiscal quarter.
+#   fpi = '1' → next fiscal year; fpi = '6' → next fiscal quarter.
 
 IBES_VARS = {
     "ticker":   "I/B/E/S ticker (may differ from Compustat tic — match via CUSIP or name)",
