@@ -1,7 +1,7 @@
 # Open-Source LLM Replication of *ChatGPT and Corporate Policies*
 
 **Beibarys Nyussupov**
-NYU Stern, Text as Data, Spring 2026
+NYU Data Science / CDS, Text as Data, Spring 2026
 Replication and methodological extension of Jha, Qian, Weber, Yang (2024), *ChatGPT and Corporate Policies* (NBER Working Paper 32161).
 
 ---
