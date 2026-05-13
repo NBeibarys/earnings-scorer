@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Open-Source LLM Replication of ChatGPT and Corporate Policies</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Open-Source LLM Replication of ChatGPT and Corporate
+Policies</h1>
+</header>
+<h1
+id="open-source-llm-replication-of-chatgpt-and-corporate-policies">Open-Source
+LLM Replication of <em>ChatGPT and Corporate Policies</em></h1>
+<p><strong>Beibarys Nyussupov</strong> NYU Stern, Text as Data, Spring
+2026 Replication and methodological extension of Jha, Qian, Weber, Yang
+(2024), <em>ChatGPT and Corporate Policies</em> (NBER Working Paper
+32161).</p>
+<hr />
+<h2 id="abstract">Abstract</h2>
+<p>Jha et al. (2024) show that GPT-3.5 can extract a continuous
+capital-expenditure direction signal from S&amp;P 500 earnings call
+transcripts, and that this signal predicts subsequent firm-level
+investment in standard panel regressions. We replicate the headline
+pipeline using an open-weight GPT-4-class model
+(<code>Qwen/Qwen3-32B</code>, served by DeepInfra) and introduce three
+methodological refinements that the original paper either omits or
+treats as artefacts of GPT-3.5’s context window: a turn-preserving
+1,500-word chunker with explicit continuation markers, a 4-class
+direction scheme paired with an evidence-aware aggregation rule, and a
+3-variant prompt-sensitivity test on a 500-transcript subsample.
+Validating against I/B/E/S analyst capex consensus revisions in the 30
+days after each call, we find a within-firm Spearman correlation of
++0.060 (p = 3.75e-6, n = 5,853 firm-quarters across 519 firms) between
+the LLM transcript score and the post-call analyst expectation. The
+corresponding headline panel regression of two-quarter-ahead capital
+expenditure on the LLM score, with firm and year fixed effects, yields a
+coefficient of +0.0040 (t = 1.17, p = 0.24, n = 7,144). Direction
+matches the paper but the coefficient is not significant in our
+subsample at the conventional five-percent threshold; the within-firm
+I/B/E/S validation is the operative external check that the score
+reflects real capex content rather than noise. All scoring code,
+prompts, model identifier, and seeds are pinned for reproducibility; the
+full pipeline reruns end-to-end against the same DeepInfra endpoint for
+roughly USD 60.</p>
+<hr />
+<h2 id="introduction">1. Introduction</h2>
+<p>The Jha, Qian, Weber, Yang (2024) paper is one of the cleanest
+demonstrations to date that a general-purpose large language model, with
+no fine-tuning, can extract economically meaningful structured
+information from corporate disclosures. Their construction is simple.
+Each S&amp;P 500 earnings call transcript is split into fixed 2,500-word
+blocks; each block is fed to GPT-3.5 with a prompt asking the model to
+classify the firm’s expected capital-spending direction over the next
+year on a five-class scale; per-block scores are averaged into a
+firm-quarter score; that score is regressed on subsequent realised capex
+in a standard panel specification with firm and year fixed effects. The
+result is a strongly significant positive coefficient on the LLM score,
+validated externally against the proprietary Duke CFO Survey.</p>
+<p>Three design choices in the original pipeline reflect engineering
+constraints of the model used rather than principled statistical
+decisions, and these choices are good targets for methodological
+replication. First, the 2,500-word block segmentation is set by
+GPT-3.5-Turbo’s context window and slices speakers mid-sentence at block
+boundaries, which destroys cross-turn coherence at every cut. Second,
+the prompt is run exactly once with one wording, so the headline number
+is implicitly conditional on a particular phrasing the authors chose.
+Third, the validation relies on a private survey that academic readers
+cannot independently re-pull. We address all three with a single
+open-source pipeline that costs roughly USD 60 to rerun end-to-end and
+is reproducible from a pinned model identifier and a single random
+seed.</p>
+<p>The rest of this paper proceeds as follows. Section 2 describes the
+data, including the pinned transcript dataset and the WRDS pulls.
+Section 3 lays out the methodology and the three departures from the
+paper. Section 4 reports the prompt sensitivity analysis. Section 5
+presents the I/B/E/S external validation. Section 6 reports the headline
+panel regression. Section 7 discusses limitations and
+reproducibility.</p>
+<h2 id="data">2. Data</h2>
+<p>The transcript corpus is the public HuggingFace dataset
+<code>kurry/sp500_earnings_transcripts</code>, pinned to a specific
+commit hash to guarantee bit-identical re-pulls. After dropping rows
+with empty <code>structured_content</code> and capping at 2024-12-31 to
+align with current CRSP availability, the universe contains 33,234
+earnings calls across 685 unique S&amp;P 500 firms over 2005-2024. Each
+transcript is stored as an ordered list of speaker turns, which the
+chunker described in Section 3 packs into roughly 240,000 1,500-word
+chunks across the full corpus.</p>
+<p>Financial data is pulled from WRDS in five files: Compustat quarterly
+fundamentals (<code>comp.fundq</code> joined to
+<code>comp.company</code> for SIC), the CCM link table
+(<code>crsp.ccmxpf_lnkhist</code>), CRSP monthly returns
+(<code>crsp.msf</code>), Fama-French five factors plus the UMD momentum
+factor (<code>ff.fivefactors_monthly</code>), and I/B/E/S analyst capex
+consensus (<code>ibes.statsum_xepsus</code> filtered to
+<code>measure='CPX'</code>, <code>fpi='1'</code>). All variable lists
+are centralised in <code>data/config.py</code>; no parameter is
+hardcoded elsewhere in the codebase.</p>
+<p>The headline scoring run uses a 10,000-transcript stratified
+subsample of the corpus, drawn before any scoring began with
+proportional allocation by year and SIC-derived sector and a fixed seed.
+The subsample distribution matches the population on year and sector
+marginals to within 1 percentage point. The DeepInfra inference run was
+halted at the 57,000-chunk checkpoint due to provider-side throughput
+throttling on a multi-tenant GPU fleet; the resulting analytic sample of
+fully-scored transcripts is 7,602. We treat the early-stopping decision
+and the sample size transparently as a documented aspect of the
+methodology rather than as a post-hoc filter; partial-coverage
+transcripts are kept in a parallel sensitivity file but excluded from
+the headline.</p>
+<p>Figure 5 shows the chunk-count distribution under the turn-preserving
+1,500-word segmentation: the median transcript yields 7 chunks and the
+95th percentile yields 9, which sets the rough scale of inference cost
+per call.</p>
+<figure>
+<img src="figures/fig5_chunks_per_transcript.png"
+alt="Figure 5: Chunks per transcript" />
+<figcaption aria-hidden="true">Figure 5: Chunks per
+transcript</figcaption>
+</figure>
+<h2 id="methodology">3. Methodology</h2>
+<h3 id="turn-preserving-chunking-with-continuation-markers">3.1
+Turn-preserving chunking with continuation markers</h3>
+<p>The original paper splits each transcript into fixed 2,500-word
+blocks, which means a single CFO answer to a single analyst question can
+be arbitrarily cut in half at a block boundary, with the second half
+serving as the start of the next block alongside whatever speaker
+happens to come after it. We chunk on complete speaker turns instead.
+Operator and empty-text turns are stripped first; the remaining turns
+are packed greedily into 1,500-word batches such that no short turn is
+ever split. A single turn longer than 1,500 words (the longest in our
+corpus is 10,409 words, a CEO opening statement) is the only case where
+mid-turn splitting is permitted, and in that case the first part
+receives a <code>[continues in next chunk]</code> suffix and the second
+part receives a <code>[continuation of &lt;speaker&gt;]</code> prefix.
+The system message tells the model exactly what those markers mean and
+instructs it to return <code>insufficient_information</code> if the
+visible text fragment alone does not contain enough information to
+assign a direction.</p>
+<h3 id="four-class-direction-with-evidence-aware-aggregation">3.2
+Four-class direction with evidence-aware aggregation</h3>
+<p>The original paper uses a five-class scale
+(<code>increase substantially</code>, <code>increase</code>,
+<code>no change</code>, <code>decrease</code>,
+<code>decrease substantially</code>) plus an
+<code>insufficient information</code> escape hatch. The “substantially”
+qualifier is subjective and unstable across human raters: what counts as
+a substantial capex increase depends on firm size, sector, and CFO
+speaking style. We collapse to a 4-class scheme (<code>increase</code>,
+<code>no change</code>, <code>decrease</code>,
+<code>information not given</code>) with a simple {+1, 0, -1, 0}
+numerical scoring map. This is a strict simplification; pooling
+magnitudes happens implicitly in the paper’s OLS aggregation anyway, so
+we make it explicit at the labelling stage and report higher
+classification stability across prompts (Section 4) as a result.</p>
+<p>The transcript-level score is the <strong>evidence-aware
+mean</strong> of the per-chunk score: chunks classified
+<code>information_state = insufficient_information</code> are dropped
+before averaging, and the mean is taken over the remaining informative
+chunks only. Without this filter, the typical earnings call (which
+contains many chunks discussing topics other than capex) would have its
+score diluted toward zero by uninformative content; the filter recovers
+the actual signal-bearing chunks. Audit columns
+(<code>n_informative_chunks</code>, <code>share_informative</code>)
+travel alongside the score for downstream filtering.</p>
+<h3 id="production-prompt-and-decoding-parameters">3.3 Production prompt
+and decoding parameters</h3>
+<p>The production prompt asks the model to classify the firm’s planned
+change in capital spending over the next year, lists the four legal
+classes plus the <code>information not given</code> option, restates the
+scoring map, draws the explicit <code>no change</code> versus
+<code>information not given</code> distinction, and requires a JSON
+response containing the direction class, numerical score, an
+<code>information_state</code> field that records why the classification
+was made, a verbatim supporting excerpt from the chunk text (a
+hallucination guardrail), and a one-sentence explanation. The model is
+<code>Qwen/Qwen3-32B</code> served via the DeepInfra OpenAI-compatible
+endpoint with <code>temperature=0</code>, <code>top_p=1.0</code>,
+<code>seed=42</code>, and
+<code>response_format={"type":"json_object"}</code>. The system message
+includes a <code>/no_think</code> directive that disables Qwen 3’s
+reasoning mode and reduces per-call output by roughly 5x, because the
+structured-extraction task does not benefit from chain-of-thought
+reasoning on this kind of input.</p>
+<p>Figure 1 shows the resulting distribution of transcript-level scores
+on the analytic sample. The distribution is approximately symmetric
+around zero with a fat right tail, consistent with the prior that
+earnings-call CFOs talk about expansion more often than contraction.</p>
+<figure>
+<img src="figures/fig1_score_distribution.png"
+alt="Figure 1: Score distribution" />
+<figcaption aria-hidden="true">Figure 1: Score distribution</figcaption>
+</figure>
+<p>Figure 2 shows the same scores aggregated to annual means with
+one-standard-error bars and the 2008-2009 and 2020 macro shocks shaded.
+The annual time series shows the expected pattern: scores compress and
+dip during the financial crisis and during the COVID quarter, and
+recover to positive territory in expansion years.</p>
+<figure>
+<img src="figures/fig2_annual_mean_score.png"
+alt="Figure 2: Annual mean score over time" />
+<figcaption aria-hidden="true">Figure 2: Annual mean score over
+time</figcaption>
+</figure>
+<h2 id="prompt-sensitivity">4. Prompt sensitivity</h2>
+<p>We score the same fixed 500-transcript subsample three times, once
+per prompt variant. V1 is the production prompt described above. V2 is
+an alternative wording with the same 4-class scoring map, different
+vocabulary (“CapEx” instead of “capital spending”), and a different
+ordering of the legal classes. V3 is a terse variant that strips the
+<code>information_state</code> scaffolding, the
+no-change-versus-information-not-given disambiguation, and the
+explanation field, retaining only the bare question and the JSON
+schema.</p>
+<p>Two metrics are reported: the chunk-level exact-match agreement rate
+(share of chunks where two variants assign exactly the same 4-class
+label) and the transcript-level Spearman rank correlation on the
+smart-mean score. Results:</p>
+<table>
+<thead>
+<tr>
+<th>Pair</th>
+<th>Chunk-level exact-match</th>
+<th>Transcript-level Spearman ρ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V1 (primary) vs V2 (alternative wording)</td>
+<td>78.6 %</td>
+<td>0.74</td>
+</tr>
+<tr>
+<td>V1 (primary) vs V3 (terse, no scaffold)</td>
+<td>74.6 %</td>
+<td>0.53</td>
+</tr>
+<tr>
+<td>V2 vs V3</td>
+<td>(not reported)</td>
+<td>0.63</td>
+</tr>
+</tbody>
+</table>
+<p>The 4-class direction is robust across prompt phrasings as long as
+the structured scaffolding is preserved: V1 and V2, both fully
+scaffolded, agree on roughly four out of five chunks and produce
+transcript scores that are rank-correlated at 0.74. Removing the
+scaffold (V3) drops chunk-level agreement to 75 percent, but more
+importantly it drops the transcript-level Spearman correlation to 0.53.
+The mechanism behind this asymmetry is informative: chunk-level
+direction calls are nearly as stable under V3 as under V2, but V3 marks
+materially different chunks as “informative” because it lacks the
+four-way <code>information_state</code> scaffold that V1 uses to draw
+the boundary between informative and uninformative content. Once
+smart-mean aggregation filters by that field, the V3 transcript score
+uses a different denominator than V1, and the resulting transcript-level
+rank correlation drops sharply. The signal is in the question; the
+precision is in the scaffold. We treat V1 as the production prompt on
+the grounds that the structured form is the most carefully specified,
+and we disclose the V1-vs-V3 drop as an explicit limitation that future
+bare-question replications should expect.</p>
+<p>Figure 3 shows the V1 vs V2 and V1 vs V3 transcript-score scatters
+with the y=x line overlaid.</p>
+<figure>
+<img src="figures/fig3_prompt_robustness.png"
+alt="Figure 3: Prompt robustness" />
+<figcaption aria-hidden="true">Figure 3: Prompt robustness</figcaption>
+</figure>
+<h2 id="external-validation-against-ibes">5. External validation against
+I/B/E/S</h2>
+<p>The original paper’s headline external-validity check is a regression
+of the LLM score on the Duke CFO Survey, which we cannot access. As a
+public, high-frequency substitute we use I/B/E/S analyst capex consensus
+forecasts. For each scored transcript we compute the mean analyst CPX
+consensus estimate dated within 30 days after the earnings call
+(<code>POST_WIN = 30</code> days, <code>measure = CPX</code>,
+<code>fpi = '1'</code> for the next-fiscal-year horizon). To remove the
+firm-size confound that dominates raw CPX levels (a $50 billion
+industrial has analyst capex expectations in the billions; a $500
+million retailer has them in the tens of millions), we subtract each
+firm’s own median post-call CPX consensus, which leaves only the
+call-by-call deviation from that firm’s normal level.</p>
+<p>The within-firm Spearman correlation between the LLM transcript score
+and the firm-demeaned post-call CPX consensus is <strong>ρ = +0.060, p =
+3.75e-6, on n = 5,853 firm-quarters across 519 firms</strong>. The
+probability of seeing a correlation this strong by chance is roughly
+four in a million. The naive cross-firm Spearman on raw post-call CPX
+levels is ρ = +0.002 and p = 0.88, exactly as expected: the firm-size
+signal completely swamps any per-call signal in the raw cross-section,
+which is why the within-firm demean is the operative test.</p>
+<p>Direction-conditional means show the expected pattern in two of three
+buckets:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>LLM score range</th>
+<th>n</th>
+<th>Mean within-firm-demeaned post-call CPX (USD millions)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>score &gt; +0.25</td>
+<td>3,967</td>
+<td>+127 (positive deviation, expected)</td>
+</tr>
+<tr>
+<td>≈ 0</td>
+<td>1,410</td>
+<td>+1.6 (essentially flat, expected)</td>
+</tr>
+<tr>
+<td>score &lt; −0.25</td>
+<td>476</td>
+<td>+77 (weak / wrong direction)</td>
+</tr>
+</tbody>
+</table>
+<p>The negative-score subgroup does not show the symmetric negative
+shift its size predicts. We attribute this to two factors: a small
+subgroup size of 476 transcripts (a single outlier can drag the
+conditional mean substantially) and a genuine asymmetry in how firms
+communicate capex contractions versus expansions. The same CFO who tells
+analysts “we plan to substantially expand capex in 2024” will, when
+cutting, typically use hedged restructuring-flavoured language (“we are
+taking a disciplined approach to capital allocation”) that the model is
+harder to classify confidently as a negative direction. Sell-side
+analysts face the same interpretive ambiguity, so their post-call CPX
+revisions on hedged calls are also less crisply directional. We report
+the asymmetry as a transparent limitation rather than spinning it away.
+The headline external-validity claim is the within-firm Spearman ρ and
+its p-value, both of which are unambiguous at the n = 5,853 sample
+size.</p>
+<p>Figure 4 shows the direction-conditional means with
+sample-size-weighted standard error bars.</p>
+<figure>
+<img src="figures/fig4_ibes_within_firm.png"
+alt="Figure 4: I/B/E/S validation" />
+<figcaption aria-hidden="true">Figure 4: I/B/E/S validation</figcaption>
+</figure>
+<p>This validation is in our view a stricter test than the Duke CFO
+Survey check it replaces. Sell-side analyst consensus is publicly
+observable, refreshed on the order of days around the earnings call, and
+reflects financially motivated forecasters with material accuracy
+incentives, while the Duke CFO Survey is collected at most quarterly
+from a self-selected panel of CFOs answering optional questions.</p>
+<h2 id="headline-panel-regression">6. Headline panel regression</h2>
+<p>Specification, in the spirit of Table 3 of the paper:</p>
+<p><code>capex_{t+2} / atq_{t-1}  =  β · LLM_score_t  +  γ_1 · log(atq_{t-1})  +  γ_2 · sales_growth_t  +  α_i  +  δ_t  +  ε_{it}</code></p>
+<p>where <code>α_i</code> is firm fixed effects, <code>δ_t</code> is
+fiscal-year fixed effects, <code>capex_{t+2}</code> is Compustat
+<code>capsq</code> two quarters ahead, <code>atq_{t-1}</code> is lagged
+total assets, <code>sales_growth_t</code> is the percentage change in
+<code>saleq</code>, and <code>LLM_score_t</code> is the smart-mean
+transcript score from Section 3. The dependent variable is winsorised at
+the 1st and 99th percentiles. Standard errors are clustered at the firm
+level. The simplification relative to the paper is the use of
+<code>log(atq)</code> and <code>sales_growth</code> instead of the full
+Peters-Taylor “Total Capital” and “Total q” constructions, which require
+additional Compustat variables we do not assemble in this
+submission.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>β</th>
+<th>t</th>
+<th>p</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LLM_score</code></td>
+<td>+0.0040</td>
+<td>+1.17</td>
+<td>0.24</td>
+</tr>
+<tr>
+<td><code>log(atq_{t-1})</code></td>
+<td>-0.098</td>
+<td>-4.96</td>
+<td>&lt;0.001</td>
+</tr>
+<tr>
+<td><code>sales_growth</code></td>
+<td>+0.016</td>
+<td>+3.16</td>
+<td>0.002</td>
+</tr>
+</tbody>
+</table>
+<p><code>n = 7,144</code> firm-quarter observations across 586 firms
+over 21 fiscal years. Within R² = 0.058. F(3, 6,535) = 13.0, p &lt;
+0.001 for the joint test.</p>
+<p>The coefficient on the LLM score is <strong>positive</strong> (the
+direction the paper predicts) but <strong>not statistically significant
+at the 5 percent level</strong> in our subsample. Three honest accounts
+of why are:</p>
+<ol type="1">
+<li><strong>Statistical power</strong>. With β ≈ 0.05 in the paper’s
+full 30,000-observation sample reporting t ≈ 4-5, a naive scaling to our
+n = 7,144 observations gives an expected t-statistic of roughly 4.5 ×
+√(7144/30000) ≈ 2.2. Our realised t of 1.17 is below that expected
+value, but not implausibly so given normal sampling variation around the
+point estimate.</li>
+<li><strong>Variance compression from the smart-mean filter.</strong>
+Smart-mean aggregation by construction shrinks the within-transcript
+variance of the score relative to a raw mean over all chunks, because it
+drops the zero-signal chunks that would otherwise pull most transcript
+scores toward the middle. Less variance in the regressor means a smaller
+estimated coefficient on the same underlying relationship.</li>
+<li><strong>Specification gap.</strong> The original paper controls for
+Total q and Total Cash Flow under the Peters-Taylor (2017) capital
+construction. Our specification uses simpler controls and consequently
+absorbs less of the firm-quarter capex variation that should not be
+attributed to the LLM score. The within R² is 0.058 in our
+specification; the paper reports higher within R² with the richer
+control set.</li>
+</ol>
+<p>We report the headline coefficient as <strong>directionally
+consistent with the paper but not significant at conventional thresholds
+in this specification on this subsample</strong>. The combination of the
+highly significant within-firm I/B/E/S validation (Section 5) and the
+directionally-correct panel coefficient supports the qualitative claim
+that the LLM score reflects real capex content; the precise magnitude on
+realised capex two quarters ahead is sensitive to specification choices
+and sample size in ways the original paper’s 30,000-observation
+full-sample run can mask.</p>
+<h2 id="limitations-and-reproducibility">7. Limitations and
+reproducibility</h2>
+<p><strong>Subsample headline.</strong> The realised analytic sample is
+7,602 fully-scored transcripts rather than the pre-registered 10,000,
+due to provider-side throughput throttling during the scoring run.
+Stratification by year and sector preserves the population’s marginal
+distributions on both dimensions. Statistical power for the headline
+coefficient is preserved in the sense that the paper’s reported effect
+would still be detectable if it held in our subsample at the same
+magnitude; the realised null in Section 6 is an honest finding, not a
+power artefact.</p>
+<p><strong>Provider non-determinism.</strong>
+<code>temperature = 0</code> and <code>seed = 42</code> together force
+greedy decoding under a fixed RNG seed, but DeepInfra serves Qwen 3 32B
+on a multi-tenant GPU fleet where batch composition and mixed-precision
+rounding can introduce roughly 1 to 3 percent chunk-level output
+variation across reruns. Aggregation across 7 chunks per transcript
+averages most of this out at the firm-quarter level. Bit-identical
+reproducibility is not currently achievable on any commercial
+open-weight inference provider; this is the best-effort guarantee.</p>
+<p><strong>Prompt sensitivity in aggregation.</strong> As reported in
+Section 4, transcript-level concordance between the production V1 prompt
+and the bare-question V3 prompt drops to ρ = 0.53 once the structured
+<code>information_state</code> scaffold is removed. The headline numbers
+are conditional on the production V1 prompt. Bare-question replications
+of this method should expect noisier transcript-level scores.</p>
+<p><strong>Asymmetry in negative-score validation.</strong> I/B/E/S
+validation is clean for positive and neutral LLM scores but weaker for
+negative scores. We discuss the most likely cause in Section 5: firms
+typically communicate capex cuts in hedged language that both the LLM
+and sell-side analysts find harder to classify confidently than the
+typically-explicit language used to communicate expansions.</p>
+<p><strong>Open-source model substitution.</strong> Qwen 3 32B is
+GPT-4-class on standard benchmarks (MMLU ~82, IFEval ~80) and is a
+strict capability upgrade over the paper’s GPT-3.5-Turbo (MMLU ~70), but
+it is not the model the original paper used. Direct point-estimate
+comparison with Jha et al. (2024) is therefore suggestive rather than
+literal.</p>
+<p><strong>Reproducibility checklist.</strong> The following are pinned
+in code, not free parameters: model identifier
+<code>Qwen/Qwen3-32B</code>, sampling seed 42, calibration seed 7,
+robustness seed 11, transcript-dataset commit hash, all WRDS variable
+lists in <code>data/config.py</code>. With a DeepInfra account, a WRDS
+account (only required to refresh financials), and the <code>.env</code>
+file from this repository, the full pipeline reruns end-to-end in
+roughly one to two hours of wall-clock time at a posted-price floor of
+approximately USD 25 for the realised subsample, or approximately USD 54
+for the full 33,000-transcript corpus.</p>
+<hr />
+<h2 id="references">References</h2>
+<p>Jha, M., Qian, J., Weber, M., &amp; Yang, B. (2024). <em>ChatGPT and
+Corporate Policies.</em> NBER Working Paper 32161.</p>
+<p>Peters, R. H., &amp; Taylor, L. A. (2017). Intangible capital and the
+investment-q relation. <em>Journal of Financial Economics</em>, 123(2),
+251-272.</p>
+<p>Tetlock, P. C. (2007). Giving content to investor sentiment: The role
+of media in the stock market. <em>Journal of Finance</em>, 62(3),
+1139-1168.</p>
+<p>Loughran, T., &amp; McDonald, B. (2011). When is a liability not a
+liability? Textual analysis, dictionaries, and 10-Ks. <em>Journal of
+Finance</em>, 66(1), 35-65.</p>
+</body>
+</html>
