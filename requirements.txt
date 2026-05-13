@@ -1,7 +1,26 @@
+# Data
 pandas
 pyarrow
+numpy
 datasets>=2.0
 python-dotenv
+
+# WRDS data pulls
 wrds
-streamlit
+
+# Async LLM scoring via DeepInfra
+httpx[http2]
+
+# Aggregation, validation, regressions
+scipy
+scikit-learn
 statsmodels
+linearmodels
+
+# Plots
+matplotlib
+seaborn
+
+# Notebook runtime
+jupyter
+ipykernel
