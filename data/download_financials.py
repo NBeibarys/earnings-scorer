@@ -195,6 +195,28 @@ def pull_ff5_factors(db: wrds.Connection) -> pd.DataFrame:
 
 # ── I/B/E/S Analyst Forecasts ─────────────────────────────────────────────────
 
+def resolve_ibes_tickers(db: wrds.Connection, cusip_list: str) -> str:
+    """
+    Map our Compustat CUSIPs to I/B/E/S tickers via ibes.idsum security master.
+    I/B/E/S ticker often differs from market ticker — CUSIP is stable identifier.
+    Returns SQL-safe quoted ticker list ready for statsum queries.
+    """
+    query = f"""
+        SELECT DISTINCT
+            ticker
+        FROM
+            ibes.idsum
+        WHERE
+            cusip IN ({cusip_list})
+    """
+
+    print("  Resolving I/B/E/S tickers via CUSIP (ibes.idsum)...")
+    df = db.raw_sql(query)
+    tickers = df["ticker"].dropna().unique().tolist()
+    print(f"  {len(tickers):,} I/B/E/S tickers resolved from CUSIP match")
+    return ", ".join(f"'{t}'" for t in tickers)
+
+
 def pull_ibes(db: wrds.Connection, ticker_list: str) -> pd.DataFrame:
     """
     Pull I/B/E/S consensus capex and EPS forecasts.
@@ -284,7 +306,11 @@ def main():
     ff5  = pull_ff5_factors(db)
     _save(ff5, "ff5_factors_monthly")
 
-    ibes = pull_ibes(db, ticker_list)
+    # I/B/E/S — recover full coverage via CUSIP match (ticker drift fix)
+    # Compustat cusip is 9-digit (with check digit), I/B/E/S idsum is 8-digit. Truncate.
+    cusip_list  = ", ".join(f"'{c[:8]}'" for c in compustat["cusip"].dropna().unique())
+    ibes_tickers = resolve_ibes_tickers(db, cusip_list)
+    ibes         = pull_ibes(db, ibes_tickers)
     _save(ibes, "ibes_consensus")
 
     db.close()

@@ -24,7 +24,7 @@ TRANSCRIPT_DATASET_REVISION = "f3ded372da8d18dc6ad98955c4558e34b5fe6d45"
 # Paper covers 2006–2020. We extend to 2025 as a contribution.
 
 START_DATE = "2005-01-01"
-END_DATE   = "2025-12-31"
+END_DATE   = "2024-12-31"   # capped at CRSP availability — uniform sample across all sources
 
 # ── Compustat Quarterly Variables ─────────────────────────────────────────────
 # Source: comp.fundq joined with comp.company (sic only).
@@ -48,6 +48,7 @@ COMPUSTAT_VARS = {
     "datadate": "fiscal quarter end date",
     "fyearq":   "fiscal year",
     "fqtr":     "fiscal quarter (1–4)",
+    "cusip":    "9-digit CUSIP — used for I/B/E/S ticker recovery via ibes.idsum",
 
     # ── Investment outcomes  [Table 1, 3, 4, 5, 6] ───────────────────────────
     "capsq":    "capital expenditures — quarterly SCF (direct, not year-to-date)",
@@ -126,6 +127,7 @@ FF5_VARS = {
 
 IBES_VARS = {
     "ticker":   "I/B/E/S ticker (may differ from Compustat tic — match via CUSIP or name)",
+    "cusip":    "8-digit CUSIP — direct join with Compustat cusip[:8] for verification",
     "fpedats":  "forecast period end date",
     "statpers": "statistical period date (consensus snapshot date)",
     "measure":  "forecast measure: CPEX = capex, EPS = earnings per share",
