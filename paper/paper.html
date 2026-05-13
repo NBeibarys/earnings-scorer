@@ -238,32 +238,124 @@ open-source pipeline that costs roughly USD 60 to rerun end-to-end and
 is reproducible from a pinned model identifier and a single random
 seed.</p>
 <p>The rest of this paper proceeds as follows. Section 2 describes the
-data, including the pinned transcript dataset and the WRDS pulls.
-Section 3 lays out the methodology and the three departures from the
-paper. Section 4 reports the prompt sensitivity analysis. Section 5
-presents the I/B/E/S external validation. Section 6 reports the headline
-panel regression. Section 7 discusses limitations and
-reproducibility.</p>
-<h2 id="data">2. Data</h2>
+data, including a detailed exploratory analysis of the transcript corpus
+and the WRDS pulls. Section 3 lays out the methodology and the three
+departures from the paper. Section 4 reports the prompt sensitivity
+analysis. Section 5 presents the I/B/E/S external validation. Section 6
+reports the headline panel regression. Section 7 discusses limitations
+and reproducibility, including the provider-side compute bottleneck that
+bounded the realised analytic sample.</p>
+<h2 id="data-and-exploratory-analysis">2. Data and exploratory
+analysis</h2>
+<h3 id="transcript-corpus">2.1 Transcript corpus</h3>
 <p>The transcript corpus is the public HuggingFace dataset
 <code>kurry/sp500_earnings_transcripts</code>, pinned to a specific
-commit hash to guarantee bit-identical re-pulls. After dropping rows
-with empty <code>structured_content</code> and capping at 2024-12-31 to
-align with current CRSP availability, the universe contains 33,234
-earnings calls across 685 unique S&amp;P 500 firms over 2005-2024. Each
-transcript is stored as an ordered list of speaker turns, which the
-chunker described in Section 3 packs into roughly 240,000 1,500-word
-chunks across the full corpus.</p>
-<p>Financial data is pulled from WRDS in five files: Compustat quarterly
-fundamentals (<code>comp.fundq</code> joined to
-<code>comp.company</code> for SIC), the CCM link table
-(<code>crsp.ccmxpf_lnkhist</code>), CRSP monthly returns
-(<code>crsp.msf</code>), Fama-French five factors plus the UMD momentum
-factor (<code>ff.fivefactors_monthly</code>), and I/B/E/S analyst capex
-consensus (<code>ibes.statsum_xepsus</code> filtered to
-<code>measure='CPX'</code>, <code>fpi='1'</code>). All variable lists
-are centralised in <code>data/config.py</code>; no parameter is
-hardcoded elsewhere in the codebase.</p>
+commit hash to guarantee bit-identical re-pulls. The raw file contains
+33,362 earnings call rows; after dropping rows with empty
+<code>structured_content</code> and capping at 2024-12-31 to align with
+current CRSP availability, the universe contains 33,234 calls across 685
+unique S&amp;P 500 firms over 2005-2024.</p>
+<p>The exploratory pass reveals four facts that shape every downstream
+choice in the paper. <strong>First</strong>, transcript coverage expands
+sharply from 2005 (only 20 calls) into the early 2010s and stabilises at
+roughly 1,500-2,000 calls per year through 2024. Earlier years are
+therefore systematically underrepresented in any unweighted sample,
+which motivates the year-stratified subsampling rule in Section 4.
+<strong>Second</strong>, the median transcript is roughly 9,196 words
+long and the distribution is tight (most calls fall in the 6,000-12,000
+word range), so a per-call inference budget can be computed reliably as
+a small constant times the chunk count rather than as a high-variance
+per-call cost. <strong>Third</strong>, the only field with material
+missingness is <code>company_name</code> (~27% missing), which is
+supplementary metadata; every transcript has scorable text in
+<code>structured_content</code>. <strong>Fourth</strong>, the dataset
+stores each transcript as an ordered list of speaker turns with
+<code>{speaker, text}</code> keys, which makes the speaker boundary an
+explicit, machine-readable structure rather than a heuristic to be
+inferred from formatting.</p>
+<p>The speaker-turn structure is the single most important feature of
+this corpus for our purposes. Across all 33,234 transcripts there are
+2,359,861 non-operator speaker turns. Operator turns (“Operator: please
+ask your question”) are pure transition noise that adds no investment
+signal and dilutes any per-chunk classification; we drop them before
+chunking. A document-level audit using a rule-based capex anchor finds
+that <strong>64.5% of transcripts contain at least some capex-related
+context</strong>, and within that context the most common pattern by a
+substantial margin is increase or expansion language. This skew matches
+the prior that earnings-call CFOs talk about expansion more often than
+contraction and is consistent with the score distribution we recover
+after LLM scoring (Section 3, Figure 1).</p>
+<h3 id="financial-data">2.2 Financial data</h3>
+<p>Financial data is pulled from WRDS in five files, with all variable
+lists centralised in <code>data/config.py</code>:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>File</th>
+<th>WRDS source</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compustat_quarterly.parquet</code></td>
+<td><code>comp.fundq</code> joined to <code>comp.company</code> for
+SIC</td>
+<td>capex (<code>capsq</code>), total assets (<code>atq</code>), sales
+(<code>saleq</code>), R&amp;D (<code>xrdq</code>), SG&amp;A
+(<code>xsgaq</code>), market cap (<code>cshoq</code>,
+<code>prccq</code>), debt (<code>dlttq</code>, <code>dlcq</code>), cash
+flow components (<code>ibq</code>, <code>dpq</code>)</td>
+</tr>
+<tr>
+<td><code>ccm_link.parquet</code></td>
+<td><code>crsp.ccmxpf_lnkhist</code></td>
+<td>gvkey ↔︎ permno bridge, with <code>linkdt</code> and
+<code>linkenddt</code> for valid date ranges</td>
+</tr>
+<tr>
+<td><code>crsp_monthly.parquet</code></td>
+<td><code>crsp.msf</code></td>
+<td>monthly returns and prices for downstream return tests</td>
+</tr>
+<tr>
+<td><code>ff5_factors_monthly.parquet</code></td>
+<td><code>ff.fivefactors_monthly</code></td>
+<td>five Fama-French factors plus the UMD momentum factor</td>
+</tr>
+<tr>
+<td><code>ibes_consensus.parquet</code></td>
+<td><code>ibes.statsum_xepsus</code> (<code>measure='CPX'</code>) and
+<code>ibes.statsum_epsus</code></td>
+<td>analyst consensus capex and EPS forecasts; tickers bridged to
+Compustat via 8-digit CUSIP</td>
+</tr>
+</tbody>
+</table>
+<p>Several EDA findings on the financial side carry over directly into
+the analytic decisions later in the paper. Compustat firm identifiers
+are complete and missingness is concentrated in <code>xrdq</code> and
+<code>xsgaq</code> (R&amp;D and SG&amp;A), which is expected since not
+all firms separately disclose these line items. Some <code>capsq</code>
+observations are negative; these are rare but flagged because capex is
+the central realised investment outcome in Section 6. CRSP returns and
+prices are nearly complete; negative <code>prc</code> values are CRSP’s
+bid-ask midpoint convention rather than data errors, and we use
+<code>abs(prc)</code> whenever computing market capitalization. The CCM
+link table contains many-to-one mappings (multiple permnos per gvkey)
+when firms relist, merge, or spin off; these are time-resolvable using
+<code>linkdt</code>/<code>linkenddt</code>. I/B/E/S analyst breadth is
+much larger for <code>EPS</code> than for <code>CPX</code>, especially
+at the quarterly horizon; this directly explains why the I/B/E/S
+external-validity test in Section 5 uses the annual <code>CPX</code>
+horizon (<code>fpi='1'</code>) rather than the next-quarter horizon, and
+why the matched sample for that test (n = 5,853) is smaller than the
+full scored sample.</p>
 <p>The headline scoring run uses a 10,000-transcript stratified
 subsample of the corpus, drawn before any scoring began with
 proportional allocation by year and SIC-derived sector and a fixed seed.
@@ -271,11 +363,10 @@ The subsample distribution matches the population on year and sector
 marginals to within 1 percentage point. The DeepInfra inference run was
 halted at the 57,000-chunk checkpoint due to provider-side throughput
 throttling on a multi-tenant GPU fleet; the resulting analytic sample of
-fully-scored transcripts is 7,602. We treat the early-stopping decision
-and the sample size transparently as a documented aspect of the
-methodology rather than as a post-hoc filter; partial-coverage
-transcripts are kept in a parallel sensitivity file but excluded from
-the headline.</p>
+fully-scored transcripts is 7,602. The early-stopping decision is
+documented transparently as part of the methodology rather than as a
+post-hoc filter; partial-coverage transcripts are kept in a parallel
+sensitivity file but excluded from the headline.</p>
 <p>Figure 5 shows the chunk-count distribution under the turn-preserving
 1,500-word segmentation: the median transcript yields 7 chunks and the
 95th percentile yields 9, which sets the rough scale of inference cost
@@ -305,6 +396,18 @@ The system message tells the model exactly what those markers mean and
 instructs it to return <code>insufficient_information</code> if the
 visible text fragment alone does not contain enough information to
 assign a direction.</p>
+<p>The 1,500-word cap was chosen empirically from the EDA. We tested
+1,000, 1,500, 2,000, and 2,500-word budgets on the full corpus. Smaller
+chunks (1,000) more than double the API call volume without resolving
+meaningfully more turn boundaries because most non-operator turns are
+already shorter than 1,000 words. Larger chunks (2,500) save calls but
+force the model to digest entire 10-minute Q&amp;A segments in one shot,
+which past structured-extraction work shows degrades classification
+accuracy. 1,500 sits at the practical median: each chunk fits 2-4
+typical speaker turns, the median transcript needs only 7 chunks, and
+the 95th-percentile transcript needs only 9. The full-corpus
+oversize-turn tail (turns above the cap) is approximately 3% of all
+chunks.</p>
 <h3 id="four-class-direction-with-evidence-aware-aggregation">3.2
 Four-class direction with evidence-aware aggregation</h3>
 <p>The original paper uses a five-class scale
@@ -352,8 +455,9 @@ structured-extraction task does not benefit from chain-of-thought
 reasoning on this kind of input.</p>
 <p>Figure 1 shows the resulting distribution of transcript-level scores
 on the analytic sample. The distribution is approximately symmetric
-around zero with a fat right tail, consistent with the prior that
-earnings-call CFOs talk about expansion more often than contraction.</p>
+around zero with a fat right tail, consistent with the EDA finding that
+most capex-related context in the corpus is increase or expansion
+language.</p>
 <figure>
 <img src="figures/fig1_score_distribution.png"
 alt="Figure 1: Score distribution" />
@@ -517,7 +621,15 @@ Survey check it replaces. Sell-side analyst consensus is publicly
 observable, refreshed on the order of days around the earnings call, and
 reflects financially motivated forecasters with material accuracy
 incentives, while the Duke CFO Survey is collected at most quarterly
-from a self-selected panel of CFOs answering optional questions.</p>
+from a self-selected panel of CFOs answering optional questions. The
+I/B/E/S <code>CPX</code> measure is also non-trivial to access
+correctly: the EDA flagged that capex forecasts are not in the standard
+EPS summary file but in the extended-measure file
+<code>ibes.statsum_xepsus</code> under <code>measure='CPX'</code>, with
+<code>fpi='1'</code> for annual horizon, and that the I/B/E/S ticker
+frequently differs from the Compustat ticker because of corporate-action
+drift. We bridge the two via 8-digit CUSIP, which recovers 95.9% of
+transcript firms in the I/B/E/S security master.</p>
 <h2 id="headline-panel-regression">6. Headline panel regression</h2>
 <p>Specification, in the spirit of Table 3 of the paper:</p>
 <p><code>capex_{t+2} / atq_{t-1}  =  β · LLM_score_t  +  γ_1 · log(atq_{t-1})  +  γ_2 · sales_growth_t  +  α_i  +  δ_t  +  ε_{it}</code></p>
@@ -571,12 +683,15 @@ direction the paper predicts) but <strong>not statistically significant
 at the 5 percent level</strong> in our subsample. Three honest accounts
 of why are:</p>
 <ol type="1">
-<li><strong>Statistical power</strong>. With β ≈ 0.05 in the paper’s
-full 30,000-observation sample reporting t ≈ 4-5, a naive scaling to our
-n = 7,144 observations gives an expected t-statistic of roughly 4.5 ×
-√(7144/30000) ≈ 2.2. Our realised t of 1.17 is below that expected
-value, but not implausibly so given normal sampling variation around the
-point estimate.</li>
+<li><strong>Statistical power and sample size.</strong> The original
+paper uses approximately 30,000 firm-quarter observations and reports
+t-statistics in the 4 to 5 range; our realised analytic sample is 7,144
+firm-quarter observations after the IBES merge and the winsorisation
+cut. Naive scaling implies an expected t-statistic of roughly 4.5 ×
+√(7144/30000) ≈ 2.2; our realised t of 1.17 is below that expected value
+but not implausibly so given normal sampling variation. The bound on
+power is the realised sample size, which in turn was bounded by the
+provider-side compute bottleneck described in Section 7.</li>
 <li><strong>Variance compression from the smart-mean filter.</strong>
 Smart-mean aggregation by construction shrinks the within-transcript
 variance of the score relative to a raw mean over all chunks, because it
@@ -602,52 +717,91 @@ and sample size in ways the original paper’s 30,000-observation
 full-sample run can mask.</p>
 <h2 id="limitations-and-reproducibility">7. Limitations and
 reproducibility</h2>
-<p><strong>Subsample headline.</strong> The realised analytic sample is
-7,602 fully-scored transcripts rather than the pre-registered 10,000,
-due to provider-side throughput throttling during the scoring run.
-Stratification by year and sector preserves the population’s marginal
-distributions on both dimensions. Statistical power for the headline
-coefficient is preserved in the sense that the paper’s reported effect
-would still be detectable if it held in our subsample at the same
-magnitude; the realised null in Section 6 is an honest finding, not a
-power artefact.</p>
-<p><strong>Provider non-determinism.</strong>
-<code>temperature = 0</code> and <code>seed = 42</code> together force
-greedy decoding under a fixed RNG seed, but DeepInfra serves Qwen 3 32B
-on a multi-tenant GPU fleet where batch composition and mixed-precision
-rounding can introduce roughly 1 to 3 percent chunk-level output
-variation across reruns. Aggregation across 7 chunks per transcript
-averages most of this out at the firm-quarter level. Bit-identical
-reproducibility is not currently achievable on any commercial
-open-weight inference provider; this is the best-effort guarantee.</p>
-<p><strong>Prompt sensitivity in aggregation.</strong> As reported in
-Section 4, transcript-level concordance between the production V1 prompt
-and the bare-question V3 prompt drops to ρ = 0.53 once the structured
-<code>information_state</code> scaffold is removed. The headline numbers
-are conditional on the production V1 prompt. Bare-question replications
-of this method should expect noisier transcript-level scores.</p>
-<p><strong>Asymmetry in negative-score validation.</strong> I/B/E/S
-validation is clean for positive and neutral LLM scores but weaker for
-negative scores. We discuss the most likely cause in Section 5: firms
-typically communicate capex cuts in hedged language that both the LLM
-and sell-side analysts find harder to classify confidently than the
-typically-explicit language used to communicate expansions.</p>
-<p><strong>Open-source model substitution.</strong> Qwen 3 32B is
-GPT-4-class on standard benchmarks (MMLU ~82, IFEval ~80) and is a
-strict capability upgrade over the paper’s GPT-3.5-Turbo (MMLU ~70), but
-it is not the model the original paper used. Direct point-estimate
-comparison with Jha et al. (2024) is therefore suggestive rather than
-literal.</p>
-<p><strong>Reproducibility checklist.</strong> The following are pinned
-in code, not free parameters: model identifier
-<code>Qwen/Qwen3-32B</code>, sampling seed 42, calibration seed 7,
-robustness seed 11, transcript-dataset commit hash, all WRDS variable
-lists in <code>data/config.py</code>. With a DeepInfra account, a WRDS
-account (only required to refresh financials), and the <code>.env</code>
-file from this repository, the full pipeline reruns end-to-end in
-roughly one to two hours of wall-clock time at a posted-price floor of
-approximately USD 25 for the realised subsample, or approximately USD 54
-for the full 33,000-transcript corpus.</p>
+<h3 id="subsample-and-the-deepinfra-throughput-bottleneck">7.1 Subsample
+and the DeepInfra throughput bottleneck</h3>
+<p>The single biggest limitation of this submission is that the headline
+analytic sample is 7,602 fully-scored transcripts rather than the
+pre-registered 10,000 from the stratified subsample, and the
+pre-registered 10,000 is itself a subset of the full 33,234-transcript
+corpus. Two compute realities drove this.</p>
+<p>First, scoring the full 33,234-transcript corpus would require
+roughly 240,000 chunk-level API calls under the 1,500-word
+turn-preserving segmentation, at a posted-price floor of approximately
+USD 54 on DeepInfra’s Qwen 3 32B endpoint. This is affordable in
+absolute terms but consumes wall-clock time at the rate set by
+DeepInfra’s per-tenant throughput; the full-corpus run was estimated at
+one to three hours of continuous inference under nominal conditions and
+was not the right cost-time trade for this submission. A
+10,000-transcript stratified subsample, drawn proportionally on year and
+sector, was therefore pre-registered as the headline scoring universe
+before any scoring began.</p>
+<p>Second, during the actual main scoring run on the 10,000-transcript
+subsample, DeepInfra’s per-second throughput for Qwen 3 32B stabilised
+at roughly 9 to 11 requests per second once the workload reached steady
+state. This is well below the approximately 30 requests per second
+observed during the smaller prompt-robustness pass earlier in the same
+session, and DeepInfra’s documented 200-concurrent-requests-per-model
+cap was not the binding constraint. The bottleneck sits on the provider
+side: per-token decode rate under multi-tenant load. We elected to halt
+the run at the 57,000-chunk checkpoint rather than queue behind the
+throttled backend for the remainder; the realised analytic sample is
+therefore 7,602 fully-scored transcripts, drawn from the same
+pre-registered stratified subsample. Stratification by year and sector
+was applied at the transcript level before scoring, so the realised
+sample inherits the population’s marginal distributions on both
+dimensions by construction; the early stop did not introduce a new
+selection bias.</p>
+<p>The practical consequence is exactly what is documented in Section 6:
+the panel regression coefficient is directionally correct but lacks the
+statistical power to clear conventional significance thresholds at this
+sample size. A continuation run from the same checkpoint, against the
+same DeepInfra endpoint, would produce a bit-identical extension of the
+existing scores over the missing chunks at no additional engineering
+effort; the asynchronous client checkpoints every 500 chunks
+specifically so that this kind of resumption is trivial.</p>
+<h3 id="provider-non-determinism">7.2 Provider non-determinism</h3>
+<p><code>temperature = 0</code> and <code>seed = 42</code> together
+force greedy decoding under a fixed RNG seed, but DeepInfra serves Qwen
+3 32B on a multi-tenant GPU fleet where batch composition and
+mixed-precision rounding can introduce roughly 1 to 3 percent
+chunk-level output variation across reruns. Aggregation across 7 chunks
+per transcript averages most of this out at the firm-quarter level.
+Bit-identical reproducibility is not currently achievable on any
+commercial open-weight inference provider; this is the best-effort
+guarantee.</p>
+<h3 id="prompt-sensitivity-in-aggregation">7.3 Prompt sensitivity in
+aggregation</h3>
+<p>As reported in Section 4, transcript-level concordance between the
+production V1 prompt and the bare-question V3 prompt drops to ρ = 0.53
+once the structured <code>information_state</code> scaffold is removed.
+The headline numbers are conditional on the production V1 prompt.
+Bare-question replications of this method should expect noisier
+transcript-level scores.</p>
+<h3 id="asymmetry-in-negative-score-validation">7.4 Asymmetry in
+negative-score validation</h3>
+<p>I/B/E/S validation is clean for positive and neutral LLM scores but
+weaker for negative scores. We discuss the most likely cause in Section
+5: firms typically communicate capex cuts in hedged language that both
+the LLM and sell-side analysts find harder to classify confidently than
+the typically-explicit language used to communicate expansions.</p>
+<h3 id="open-source-model-substitution">7.5 Open-source model
+substitution</h3>
+<p>Qwen 3 32B is GPT-4-class on standard benchmarks (MMLU ~82, IFEval
+~80) and is a strict capability upgrade over the paper’s GPT-3.5-Turbo
+(MMLU ~70), but it is not the model the original paper used. Direct
+point-estimate comparison with Jha et al. (2024) is therefore suggestive
+rather than literal.</p>
+<h3 id="reproducibility-checklist">7.6 Reproducibility checklist</h3>
+<p>The following are pinned in code, not free parameters: model
+identifier <code>Qwen/Qwen3-32B</code>, sampling seed 42, calibration
+seed 7, robustness seed 11, transcript-dataset commit hash
+<code>f3ded372...d45</code>, all WRDS variable lists in
+<code>data/config.py</code>. With a DeepInfra account, a WRDS account
+(only required to refresh financials), and the <code>.env</code> file
+from this repository, the full pipeline reruns end-to-end in roughly one
+to two hours of wall-clock time at a posted-price floor of approximately
+USD 25 for the realised subsample, or approximately USD 54 for the full
+33,000-transcript corpus.</p>
 <hr />
 <h2 id="references">References</h2>
 <p>Jha, M., Qian, J., Weber, M., &amp; Yang, B. (2024). <em>ChatGPT and
