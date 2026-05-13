@@ -1,6 +1,6 @@
 # Open-Source LLM Replication of *ChatGPT and Corporate Policies*
 
-**NYU Stern · Text as Data · Spring 2026**
+**NYU Data Science · Text as Data · Spring 2026**
 
 Replication and methodological extension of [Jha, Qian, Weber, Yang (2024), *ChatGPT and Corporate Policies* (NBER WP 32161)](https://www.nber.org/papers/w32161).
 The original paper extracts a capital-expenditure direction signal from S&P 500 earnings call transcripts using GPT-3.5 and a single fixed prompt. This project replaces that pipeline with an open-weight GPT-4-class model (`Qwen/Qwen3-32B` via DeepInfra) and adds a turn-preserving 1,500-word chunker, a 4-class direction scheme with evidence-aware aggregation, a 3-variant prompt-sensitivity test, and an I/B/E/S analyst capex consensus validation that substitutes for the paper's proprietary Duke CFO Survey check.
